@@ -1,0 +1,32 @@
+{% load static %}
+{% load socialaccount %}
+<html>
+  <head>
+    <title>
+      Sign-up for Karuna wallet
+    </title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <body>
+      <div class="background_image"></div>
+      <div id="login-box">
+        <div class="left-box">
+          <h1>
+            Sign-up for Karuna wallet
+          </h1>
+          <input type="text" name="username" placeholder="Username"/>
+          <input type="text" name="email" placeholder="Email"/>
+          <input type="password" name="password" placeholder="Password"/>
+          <input type="password" name="password2" placeholder="Re-enter Password"/>
+          <input type="submit" name="signup-button" value="Sign Up"/>
+        </div>
+        <div class="right-box">
+          <span class="signinwith">Sign in with <br/>Social Network</span>
+          <form action="{% provider_login_url 'google' %}" method="GET" target="_self">
+            <button type="submit" class="social google">Login with Google</button>
+          </form>
+        </div>
+        <div class="or">OR</div>
+      </div>
+    </body>
+  </head>
+</html>
