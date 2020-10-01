@@ -1,0 +1,36 @@
+{% extends "account/base.html" %}
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Karuna Wallet</title>
+    </head>
+    <body>
+        {% block content %}
+        <br/>
+        <br/>
+        <div class="row justify-content-md-center">
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-header  text-center">
+                        <b><b>My Profile</b></b>
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><b><b>Username: </b></b>{{user.username}}</li>
+                        <li class="list-group-item"><b><b>Email: </b></b>{{user.email}}</li>
+                        <li class="list-group-item"><b><b>Karuna Balance: </b></b>{{wallet.balance}}</li>
+                        <li class="list-group-item"><b><b>Mobile number: </b></b>{{wallet.mobile_number}}</li>
+                        <li class="list-group-item"><b><b>Account Number: </b></b>{{wallet.account_number}}</li>
+                        <li class="list-group-item"><b><b>IFSC Code: </b></b>{{wallet.ifsc_code}}</li>
+                    </ul>
+                    </br>
+                    <button class="btn btn-secondary" action="/update-wallet" type="submit">Update wallet details</button>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+        </div>
+        {% endblock content %}
+    </body>
+</html>

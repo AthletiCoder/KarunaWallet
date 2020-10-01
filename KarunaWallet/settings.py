@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'wallet',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'KarunaWallet.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,"templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,6 +127,7 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/dashboard'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -141,6 +143,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+SOCIAL_AUTH_USER_MODEL = 'soc_accounts.User'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
