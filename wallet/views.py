@@ -80,6 +80,7 @@ def update_wallet(request, template_name="wallet/update_wallet.html"):
         form = UpdateWalletForm(request.POST)
         if form.is_valid():
             form_data = form.cleaned_data
+            form_data.pop("retype_account_number")
             clean_form = {key:value for key,value in form_data.items() if value!=""}
             wallet = Wallet.objects.filter(user=request.user)
             if wallet:
@@ -98,6 +99,8 @@ def update_wallet(request, template_name="wallet/update_wallet.html"):
                 messages.error(request, "No changes made to wallet details")
                 errors_found = True
     args["form"] = form
+    if request.method=="POST" and not errors_found:
+        return redirect('/profile')
     return TemplateResponse(request, template_name, args)
 
 def approve_claim(request, claim_id, transaction_type, template_name='wallet/dashboard.html'):
