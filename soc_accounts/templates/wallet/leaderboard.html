@@ -23,8 +23,8 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Username</th>
                                 <th scope="col">Email ID</th>
-                                <th scope="col">Peak karuna balance</th>
-                                <th scope="col">Current karuna balance</th>
+                                <th scope="col">Total rewards</th>
+                                <th scope="col">Karuna balance</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,7 +33,7 @@
                                 <th scope="row">1</th>
                                 <td>{{wallet.user.username}}</td>
                                 <td>{{wallet.user.email}}</td>
-                                <td>{{wallet.peak_balance}}</td>
+                                <td>{{wallet.karuna_tally}}</td>
                                 <td>{{wallet.balance}}</td>
                             </tr>
                             {% endfor %}
