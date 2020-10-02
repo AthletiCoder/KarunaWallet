@@ -9,7 +9,7 @@ class KarunaClaimForm(forms.Form):
     transaction_id = forms.CharField(max_length=30)
 
 class UpdateWalletForm(forms.Form):
-    mobile_validation = RegexValidator('^[6789]\d{9}$')
+    mobile_validation = RegexValidator(r'^[6789]\d{9}$')
     account_number = forms.CharField(max_length=20, required=False)
     retype_account_number = forms.CharField(max_length=20, required=False)
     ifsc_code = forms.CharField(max_length=20, label='IFSC Code', required=False)
@@ -23,3 +23,5 @@ class UpdateWalletForm(forms.Form):
                 raise forms.ValidationError("Wallet with same account number already exists")
             if self.cleaned_data.get("retype_account_number")!=self.cleaned_data.get("account_number"):
                 raise forms.ValidationError("The account numbers don't match prabhu")
+        else:
+            raise forms.ValidationError("Invalid data prabhu, please check again")
