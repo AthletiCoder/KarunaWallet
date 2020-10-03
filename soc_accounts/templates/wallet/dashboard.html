@@ -45,6 +45,9 @@
                         <thead>
                             <tr>
                                 <th scope="col">Date</th>
+                                {% ifequal user.username "admin" %}
+                                <th scope="col">Devotee</th>
+                                {% endifequal %}
                                 <th scope="col">Karuna amount</th>
                                 <th scope="col">Transaction type</th>
                                 <th scope="col">Description</th>
@@ -57,17 +60,22 @@
                             <tr>
                                 <th scope="col">
                                     {% ifequal current.transaction_status "Submitted" %}
-                                        <a href="/delete-claim/{{current.id}}/"><img src="{% static 'images/trash.svg' %}" alt="" width="20" height="20" title="Bootstrap"></a>
+                                        <a href="/delete-claim/{{current.id}}/" onclick="return confirm('Are you sure, you want to delete the claim prabhu?')"><img src="{% static 'images/trash.svg' %}" alt="" width="20" height="20" title="Bootstrap"></a>
                                     {% endifequal %}
                                     {{ current.timestamp }}
                                 </th>
+                                {% ifequal user.username "admin" %}
+                                <th scope="col">{{current.wallet.user.username}}</th>
+                                {% endifequal %}
                                 <th scope="col">{{ current.amount }}</th>
                                 <th scope="col">{{ current.transaction_type }}</th>
                                 <th scope="col">{{ current.description }}</th>
                                 <th scope="col">{{ current.transaction_status }} 
 
                                     {% ifequal current.transaction_status "Approved" %}
-                                    <a class="btn btn-primary btn-sm" role="button" href="/received/{{current.id}}/">Received!</a>
+                                        {% ifequal user.username current.wallet.user.username %}
+                                            <a class="btn btn-primary btn-sm" role="button" href="/received/{{current.id}}/"  onclick="return confirm('Are you sure, you received it prabhu?')">Received!</a>
+                                        {% endifequal %}
                                     {% endifequal %}
 
 
@@ -85,7 +93,11 @@
                                     {% endifequal %}
                                     {% endifequal %}
                                 </th>
-                                <th scope="col">{{ current.receipt.url }}</th>
+                                <th scope="col">
+                                    {% if current.receipt %}
+                                    <a href="{{current.receipt.url}}" target="_blank">See receipt</a>
+                                    {% endif %}
+                                </th>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -93,7 +105,11 @@
                 </div>
             </div>
         </div>
+        <br>
         <div class="row justify-content-md-center">
+            {% if user.username == "admin" %}
+            <a class="btn btn-dark btn-lg" href="/karuna-credit" role="button">Gift someone!</a>
+            {% endif %}
         </div>
 
         {% endblock content %}

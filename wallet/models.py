@@ -28,7 +28,7 @@ class KarunaCurrent(models.Model):
     timestamp = models.DateTimeField(verbose_name='date', default=timezone.now)
     amount = models.IntegerField(verbose_name='Amount')
     description = models.CharField(max_length=300)
-    receipt = models.ImageField(verbose_name='Photo of receipt')
+    receipt = models.ImageField(verbose_name='Photo of receipt', null=True, upload_to='receipts/')
     transaction_id = models.CharField(max_length=30)
     submitted_timestamp = models.DateTimeField(verbose_name='Submitted time', default=timezone.now)
     approved_timestamp = models.DateTimeField(verbose_name='Approved time', null=True)

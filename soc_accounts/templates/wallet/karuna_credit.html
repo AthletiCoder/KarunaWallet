@@ -1,0 +1,54 @@
+{% extends "account/base.html" %}
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Karuna Wallet</title>
+    </head>
+    <body>
+        {% block content %}
+        <br>
+        <br>
+        <div class="row">
+            <div class="col">
+            </div>
+            <div class="col-sm-5">
+                <div class="card">
+                    <div class="card-header  text-center">
+                        <b><b>Karuna Claim</b></b>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.tags == 'info'%}
+                                    <div class="alert alert-primary" role="alert">
+                                        {{message}}
+                                    </div>
+                                {% elif message.tags == 'warning'%}
+                                    <div class="alert alert-warning" role="alert">
+                                        {{message}}
+                                    </div>
+                                {% elif message.tags == 'error'%}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{message}}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <br/>
+                        {% endif %}
+                        <form method="POST" action="." enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button class="btn btn-success" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+            </div>
+          </div>
+        {% endblock %}
+    </body>
+</html>
