@@ -29,10 +29,12 @@ class UpdateWalletForm(forms.Form):
         else:
             raise forms.ValidationError("Invalid data prabhu, please check again")
 
-USERS_LIST = [(user.username, user.username) for user in User.objects.all()]
+def get_user_choices():
+    return [(user.username, user.username) for user in User.objects.all()]
+
 class KarunaCreditForm(forms.Form):
     amount = forms.IntegerField()
     description = forms.CharField(max_length=300,widget=forms.Textarea(attrs={"placeholder":"Full description on why the credit was made","cols":60,"rows":5}))
-    user = forms.CharField(widget=forms.Select(choices=USERS_LIST))
+    user = forms.CharField(widget=forms.Select(choices=get_user_choices()))
     receipt = forms.ImageField(widget=forms.FileInput(), required=False)
     transaction_id = forms.CharField(max_length=30)
