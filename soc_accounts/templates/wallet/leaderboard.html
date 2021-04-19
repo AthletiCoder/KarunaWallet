@@ -30,7 +30,7 @@
                         <tbody>
                             {% for wallet in wallets %}
                             <tr>
-                                <th scope="row">1</th>
+                                <th scope="row">{{forloop.counter}}</th>
                                 <td>{{wallet.user.username}}</td>
                                 <td>{{wallet.user.email}}</td>
                                 <td>{{wallet.karuna_tally}}</td>

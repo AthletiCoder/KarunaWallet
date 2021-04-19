@@ -40,7 +40,7 @@
         </ul>
         {% if user.is_authenticated %}
         <form class="form-inline my-2 my-lg-0" action="{% url 'account_logout' %}">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+          <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
         </form>
         {% endif %}
       </div>

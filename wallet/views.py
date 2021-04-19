@@ -1,13 +1,10 @@
-from django.shortcuts import render, redirect
 from django.template.response import TemplateResponse
 from django.contrib.auth.decorators import login_required
 from .models import Wallet, KarunaCurrent
 from .forms import KarunaClaimForm, UpdateWalletForm, KarunaCreditForm
-from django.http import HttpResponse
 from django.db.utils import IntegrityError
 from django.utils import timezone
-from django.urls import reverse, path
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib import messages
 
 @login_required

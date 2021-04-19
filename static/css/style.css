@@ -3,6 +3,7 @@ body
     margin: 0;
     padding: 0;
     background-image: url('/static/images/page_bg.png');
+    background-repeat: repeat-y;
     font-size: 16px;
     font-family: sans-serif;
     font-weight: 300;
