@@ -29,15 +29,15 @@ class UpdateWalletForm(forms.Form):
             raise forms.ValidationError("Invalid data prabhu, please check again")
 
 def get_user_choices():
-    return [(user.username, user.username) for user in User.objects.all()]
+    return [(user.username, user.username) for user in User.objects.all() if not user.username=='admin']
 
 class KarunaCreditForm(forms.Form):
     def __init__(self, *args, **kwargs):
           super(KarunaCreditForm, self).__init__(*args, **kwargs)
-          self.fields['user'] = forms.ChoiceField(choices=get_user_choices())
+          self.fields['user'].widget.choices = get_user_choices()
 
     amount = forms.IntegerField()
     description = forms.CharField(max_length=300,widget=forms.Textarea(attrs={"placeholder":"Full description on why the credit was made","cols":60,"rows":5}))
-    user = forms.CharField(widget=forms.Select(choices=get_user_choices()))
+    user = forms.ChoiceField()
     receipt = forms.ImageField(widget=forms.FileInput(), required=False)
     transaction_id = forms.CharField(max_length=30)

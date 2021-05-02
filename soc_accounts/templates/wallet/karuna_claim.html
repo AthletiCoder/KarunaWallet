@@ -35,7 +35,7 @@
                                     {% endif %} {% endfor %} {% else %} {% endif %}
                                     <form method="POST" action="." enctype="multipart/form-data">
                                         <div class="input-wrapper">
-                                            {% csrf_token %} {{ form.as_p}}
+                                            {% csrf_token %} {{ form|crispy}}
                                         </div>
                                         <button class="btn green" type="submit">Submit</button>
                                     </form>
