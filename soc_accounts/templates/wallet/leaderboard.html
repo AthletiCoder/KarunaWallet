@@ -8,16 +8,14 @@
     </head>
     <body>
         {% block content %}
-        <br/>
-        <br/>
-        <div class="row justify-content-md-center">
-            <div class="col-sm-8">
-                <div class="card">
-                    <div class="card-header  text-center">
-                        <b><b>Leaderboard</b></b>
-                    </div>
+        <div class="row">
+            <div class="card hoverable">
+                <div class="card-content">
+                    <span class="card-title">
+                        Leaderboard
+                    </span>
 
-                    <table class="table">
+                    <table class="table striped">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -38,7 +36,7 @@
                             </tr>
                             {% endfor %}
                         </tbody>
-                      </table>
+                        </table>
                 </div>
             </div>
         </div>

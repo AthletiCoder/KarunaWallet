@@ -11,6 +11,6 @@
      >{{brand.name}}</a>
 {% endfor %}
 {% endif %}
-  <a title="{{provider.name}}" class="btn btn-primary socialaccount_provider {{provider.id}}" 
-     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
+  <a title="{{provider.name}}" class="btn white black-text socialaccount_provider {{provider.id}}" 
+     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"><i class="mdi-image-linkedin"></i> {{provider.name}}</a>
 {% endfor %}

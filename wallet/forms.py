@@ -4,7 +4,6 @@ from django.core.validators import RegexValidator
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-
 class KarunaClaimForm(forms.Form):
     amount = forms.IntegerField(min_value=0)
     description = forms.CharField(max_length=300,widget=forms.Textarea(attrs={"placeholder":"Full description on why the claim is made","cols":60,"rows":5}))
@@ -33,6 +32,10 @@ def get_user_choices():
     return [(user.username, user.username) for user in User.objects.all()]
 
 class KarunaCreditForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+          super(KarunaCreditForm, self).__init__(*args, **kwargs)
+          self.fields['user'] = forms.ChoiceField(choices=get_user_choices())
+
     amount = forms.IntegerField()
     description = forms.CharField(max_length=300,widget=forms.Textarea(attrs={"placeholder":"Full description on why the credit was made","cols":60,"rows":5}))
     user = forms.CharField(widget=forms.Select(choices=get_user_choices()))

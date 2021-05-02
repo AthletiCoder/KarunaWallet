@@ -1,117 +1,113 @@
-{% extends "account/base.html" %}
-{% load static %}
+{% extends "account/base.html" %} {% load static %}
 <html lang="en">
-    <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Karuna Wallet</title>
-    </head>
-    <body>
-        {% block content %}
-        <br/>
-        <div class="row justify-content-md-center">
-            <div class="col-sm-10">
+</head>
 
-                <!--Handling error and info messages-->
-                {% if messages %}
-                    {% for message in messages %}
-                        {% if message.tags == 'info'%}
-                            <div class="alert alert-primary" role="alert">
-                                {{message}}
-                            </div>
-                        {% elif message.tags == 'warning'%}
-                            <div class="alert alert-warning" role="alert">
-                                {{message}}
-                            </div>
-                        {% elif message.tags == 'error'%}
-                            <div class="alert alert-danger" role="alert">
-                                {{message}}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <br/>
-                {% endif %}
-
-
-                <div class="card">
-                    <div class="card-header text-center">
-                        <b><b>Transaction history</b></b>
+<body>
+    {% block content %}
+    <div class="row">
+        <!--Handling error and info messages-->
+        {% if messages %} 
+            {% for message in messages %} 
+                {% if message.tags == 'info'%}
+                    <div class="alert alert-primary" role="alert">
+                        {{message}}
                     </div>
+                {% elif message.tags == 'warning'%}
+                    <div class="alert alert-warning" role="alert">
+                        {{message}}
+                    </div>
+                {% elif message.tags == 'error'%}
+                    <div class="alert alert-danger" role="alert">
+                        {{message}}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% else %}
+        {% endif %}
 
-                    <table class="table">
-                        <thead>
+
+        <div class="card hoverable">
+            <div class="card-content">
+                <span class="card-title">Transaction history</span>
+                <table class="striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            {% ifequal user.username 'admin' %}
+                                <th>Devotee</th>
+                            {% endifequal %}
+                            <th>Karuna amount</th>
+                            <th>Transaction type</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for current in currents %}
                             <tr>
-                                <th scope="col">Date</th>
-                                {% ifequal user.username "admin" %}
-                                <th scope="col">Devotee</th>
-                                {% endifequal %}
-                                <th scope="col">Karuna amount</th>
-                                <th scope="col">Transaction type</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Image</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for current in currents %}
-                            <tr>
-                                <th scope="col">
-                                    {% ifequal current.transaction_status "Submitted" %}
-                                        <a href="/delete-claim/{{current.id}}/" onclick="return confirm('Are you sure, you want to delete the claim prabhu?')"><img src="{% static 'images/trash.svg' %}" alt="" width="20" height="20" title="Bootstrap"></a>
-                                    {% endifequal %}
+                                <td>
+                                    {% if current.transaction_status == 'Submitted' %}
+                                        <a href="/delete-claim/{{current.id}}/" onclick="return confirm('Are you sure, you want to delete the claim prabhu?')">
+                                            <img src="{% static 'images/trash.svg' %}" alt="" width="20" height="20" title="Bootstrap">
+                                        </a>
+                                    {% endif %} 
                                     {{ current.timestamp }}
-                                </th>
-                                {% ifequal user.username "admin" %}
-                                <th scope="col">{{current.wallet.user.username}}</th>
-                                {% endifequal %}
-                                <th scope="col">{{ current.amount }}</th>
-                                <th scope="col">{{ current.transaction_type }}</th>
-                                <th scope="col">{{ current.description }}</th>
-                                <th scope="col">{{ current.transaction_status }} 
-
-                                    {% ifequal current.transaction_status "Approved" %}
-                                        {% ifequal user.username current.wallet.user.username %}
-                                            <a class="btn btn-primary btn-sm" role="button" href="/received/{{current.id}}/"  onclick="return confirm('Are you sure, you received it prabhu?')">Received!</a>
-                                        {% endifequal %}
-                                    {% endifequal %}
-
-
-                                    {% ifequal admin True %}
-                                    {% ifequal current.transaction_status "Submitted" %}
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          Approve
-                                        </button>
-                                        <div class="dropdown-menu">
-                                          <a class="dropdown-item" href="/approve-claim/{{current.id}}/UPI/">UPI</a>
-                                          <a class="dropdown-item" href="/approve-claim/{{current.id}}/Bank/">Bank</a>
-                                        </div>
-                                      </div>
-                                    {% endifequal %}
-                                    {% endifequal %}
-                                </th>
-                                <th scope="col">
-                                    {% if current.receipt %}
-                                    <a href="{{current.receipt.url}}" target="_blank">See receipt</a>
+                                </td>
+                                {% if user.username == 'admin' %}
+                                    <td>{{current.wallet.user.username}}</td>
+                                {% endif %}
+                                <td>{{ current.amount }}</td>
+                                <td>{{ current.transaction_type }}</td>
+                                <td>{{ current.description }}</td>
+                                <td>{{ current.transaction_status }}
+                                {% if current.transaction_status == 'Approved' %} 
+                                    {% if user.username == current.wallet.user.username %}
+                                        <a class="btn btn-primary btn-sm" role="button" href="/received/{{current.id}}/" onclick="return confirm('Are you sure, you received it prabhu?')">
+                                            Received!
+                                        </a> 
                                     {% endif %}
-                                </th>
+                                {% endif %} 
+                                {% if admin == True %} 
+                                    {% if current.transaction_status == 'Submitted' %}
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Approve
+                                                </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="/approve-claim/{{current.id}}/UPI/">UPI</a>
+                                                <a class="dropdown-item" href="/approve-claim/{{current.id}}/Bank/">Bank</a>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif%}
+                                </td>
+                                <td>
+                                    {% if current.receipt %}
+                                        <a href="{{current.receipt.url}}" target="_blank">
+                                            See receipt
+                                        </a> 
+                                    {% endif %}
+                                </td>
                             </tr>
-                            {% endfor %}
-                        </tbody>
-                      </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="card-action">
+                    {% if user.username == "admin" %}
+                    <a href="/karuna-credit">Gift someone!</a> {% endif %}
                 </div>
             </div>
         </div>
-        <br>
-        <div class="row justify-content-md-center">
-            {% if user.username == "admin" %}
-            <a class="btn btn-primary btn" href="/karuna-credit" role="button">Gift someone!</a>
-            {% endif %}
-        </div>
+    </div>
+    <br> {% endblock content %}
+</body>
 
-        {% endblock content %}
-    </body>
 </html>
