@@ -24,9 +24,9 @@ class UpdateWalletForm(forms.Form):
             if self.cleaned_data.get("account_number") and Wallet.objects.filter(account_number=self.cleaned_data.get("account_number")):
                 raise forms.ValidationError("Wallet with same account number already exists")
             if self.cleaned_data.get("retype_account_number")!=self.cleaned_data.get("account_number"):
-                raise forms.ValidationError("The account numbers don't match prabhu")
+                raise forms.ValidationError("The account numbers don't match")
         else:
-            raise forms.ValidationError("Invalid data prabhu, please check again")
+            raise forms.ValidationError("Invalid data, please check again")
 
 def get_user_choices():
     return [(user.username, user.username) for user in User.objects.all() if not user.username=='admin']
@@ -38,6 +38,6 @@ class KarunaCreditForm(forms.Form):
 
     amount = forms.IntegerField()
     description = forms.CharField(max_length=300,widget=forms.Textarea(attrs={"placeholder":"Full description on why the credit was made","cols":60,"rows":5}))
-    user = forms.ChoiceField()
+    user = forms.ChoiceField(choices=get_user_choices())
     receipt = forms.ImageField(widget=forms.FileInput(), required=False)
     transaction_id = forms.CharField(max_length=30)

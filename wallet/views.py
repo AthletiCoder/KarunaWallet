@@ -148,6 +148,7 @@ def karuna_credit(request, template_name='wallet/karuna_credit.html'):
     errors_found = False
     if request.method == "POST":
         form = KarunaCreditForm(request.POST, request.FILES)
+        print(request.POST)
         if form.is_valid():
             form_data = form.cleaned_data
             clean_form = {key:value for key,value in form_data.items() if value!="" or value!=None}
