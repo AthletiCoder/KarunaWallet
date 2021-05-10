@@ -1,5 +1,5 @@
 from django import forms
-from .models import KarunaCurrent, Wallet
+from .models import KarunaCurrent, Wallet, TransactionType
 from django.core.validators import RegexValidator
 from django.contrib.auth import get_user_model
 
@@ -8,7 +8,7 @@ class KarunaClaimForm(forms.Form):
     amount = forms.IntegerField(min_value=0)
     description = forms.CharField(max_length=300,widget=forms.Textarea(attrs={"placeholder":"Full description on why the claim is made","cols":60,"rows":5}))
     receipt = forms.ImageField(widget=forms.FileInput())
-    transaction_id = forms.CharField(max_length=30)
+    transaction_id = forms.CharField(required=False, max_length=30)
 
 class UpdateWalletForm(forms.Form):
     mobile_validation = RegexValidator(r'^[6789]\d{9}$')
@@ -40,4 +40,8 @@ class KarunaCreditForm(forms.Form):
     description = forms.CharField(max_length=300,widget=forms.Textarea(attrs={"placeholder":"Full description on why the credit was made","cols":60,"rows":5}))
     user = forms.ChoiceField(choices=get_user_choices())
     receipt = forms.ImageField(widget=forms.FileInput(), required=False)
+
+class ReimburseClaimForm(forms.Form):
+    receipt = forms.ImageField(widget=forms.FileInput())
     transaction_id = forms.CharField(max_length=30)
+    transaction_type = forms.ChoiceField(choices=TransactionType.choices)

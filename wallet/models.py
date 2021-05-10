@@ -23,6 +23,11 @@ class Wallet(models.Model):
         if not self.mobile_number and not self.account_number:
             raise ValidationError("All bank details can't be empty")
 
+class TransactionType(models.TextChoices):
+    UPI = 'UPI', 'UPI'
+    BANK = 'Bank', 'Bank'
+    CREDIT = 'Credit', 'Credit'
+
 class KarunaCurrent(models.Model):
     wallet = models.ForeignKey(Wallet, verbose_name="Linked wallet", on_delete=models.CASCADE, related_name='linked_wallet')
     timestamp = models.DateTimeField(verbose_name='date', default=timezone.now)
@@ -38,11 +43,6 @@ class KarunaCurrent(models.Model):
         APPROVED = 'Approved', 'Approved'
         RECEIVED = 'Received', 'Received'
     transaction_status = models.CharField(verbose_name='Transaction status', max_length=10, choices=TransactionStatus.choices, default='Submitted')
-
-    class TransactionType(models.TextChoices):
-        UPI = 'UPI', 'UPI'
-        BANK = 'Band', 'Bank'
-        CREDIT = 'Credit', 'Credit'
     transaction_type = models.CharField(verbose_name='Transaction type', max_length=10, choices=TransactionType.choices, null=True)
 
     def clean(self):

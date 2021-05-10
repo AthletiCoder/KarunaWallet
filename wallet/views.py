@@ -1,7 +1,7 @@
 from django.template.response import TemplateResponse
 from django.contrib.auth.decorators import login_required
 from .models import Wallet, KarunaCurrent
-from .forms import KarunaClaimForm, UpdateWalletForm, KarunaCreditForm
+from .forms import KarunaClaimForm, UpdateWalletForm, KarunaCreditForm, ReimburseClaimForm
 from django.db.utils import IntegrityError
 from django.utils import timezone
 from django.shortcuts import redirect
@@ -43,6 +43,7 @@ def karuna_claim(request, template_name="wallet/karuna_claim.html"):
                 wallet = wallet.first()
                 if clean_form.get("amount") <= wallet.balance:
                     clean_form["wallet_id"] = wallet.id
+                    clean_form["transaction_id"] = "credit"
                     try:
                         KarunaCurrent.objects.create(**clean_form)
                     except IntegrityError as e:
@@ -130,7 +131,6 @@ def approve_claim(request, claim_id, transaction_type, template_name='wallet/das
 
 @login_required
 def delete_claim(request, claim_id):
-    args = {}
     obj = KarunaCurrent.objects.filter(id=claim_id).first()
     if obj.transaction_status!="Submitted":
         messages.error(request, "Claims that have been submitted can't be deleted")
@@ -148,7 +148,6 @@ def karuna_credit(request, template_name='wallet/karuna_credit.html'):
     errors_found = False
     if request.method == "POST":
         form = KarunaCreditForm(request.POST, request.FILES)
-        print(request.POST)
         if form.is_valid():
             form_data = form.cleaned_data
             clean_form = {key:value for key,value in form_data.items() if value!="" or value!=None}
@@ -184,11 +183,50 @@ def karuna_credit(request, template_name='wallet/karuna_credit.html'):
 
 @login_required
 def received(request, claim_id, template_name="wallet/dashboard.html"):
-    args = {}
-    claim = KarunaCurrent.objects.filter(id=claim_id)
+    claim = KarunaCurrent.objects.filter(id=claim_id)    
     if claim:
         claim.update(**{"transaction_status":"Received"})
         messages.info(request, "Successfully acknowledged receipt")
     else:
         messages.error(request, "Invalid claim info")
     return redirect('/dashboard')
+
+
+def reimburse_claim(request, claim_id, template_name='wallet/karuna_reimburse.html'):
+    args = {}
+    form = ReimburseClaimForm()
+    clean_form = None
+    errors_found = False
+    if request.method == "POST":
+        form = ReimburseClaimForm(request.POST, request.FILES)
+        if form.is_valid():
+            form_data = form.cleaned_data
+            clean_form = {key:value for key,value in form_data.items() if value!=""}
+            clean_form["transaction_status"] = "Approved"
+            if request.user.username=='admin':
+                current = KarunaCurrent.objects.filter(id=claim_id)
+                if not current:
+                    messages.error(request, "Invalid claim id")
+                    errors_found = True
+                else:
+                    obj = current.first()
+                    wallet = obj.wallet
+                    if wallet.balance >= obj.amount:
+                        wallet.balance -= obj.amount
+                        wallet.save()
+                        clean_form["approved_timestamp"] = timezone.now()
+                        try:
+                            KarunaCurrent.objects.filter(id=claim_id).update(**clean_form)
+                        except IntegrityError as e:
+                            messages.error(request, str(e))
+                            errors_found = True
+                    else:
+                        messages.error(request,"The devotee doesn't have sufficient balance, can't approve now pr")
+                        errors_found = True
+            else:
+                messages.error(request,"Only admin can access this url")
+                errors_found = True
+    args["form"] = form
+    if request.method=="POST" and not errors_found:
+        return redirect('/dashboard')
+    return TemplateResponse(request, template_name, args)
